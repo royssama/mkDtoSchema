@@ -165,6 +165,17 @@
       .join("\n");
   }
 
+  async function copyText(text, textarea) {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+
+    textarea.focus();
+    textarea.select();
+    document.execCommand("copy");
+  }
+
   function setupPage() {
     const dictionary = global.DTO_SCHEMA_WORDS || {};
     const input = document.querySelector("#source");
@@ -192,7 +203,7 @@
     includeImport.addEventListener("change", runConvert);
 
     copyButton.addEventListener("click", async () => {
-      await navigator.clipboard.writeText(output.value);
+      await copyText(output.value, output);
       copyButton.textContent = "복사 완료";
       window.setTimeout(() => {
         copyButton.textContent = "결과 복사";
