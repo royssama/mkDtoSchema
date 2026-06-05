@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DTO Schema Description 생성기</title>
+    <style>
+      :root {
+        color: #1f2937;
+        font-family: Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+        background: #f3f4f6;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      main {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 32px 0 48px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 30px;
+      }
+
+      p {
+        line-height: 1.6;
+      }
+
+      .panel {
+        padding: 20px;
+        margin-top: 20px;
+        border: 1px solid #d1d5db;
+        border-radius: 14px;
+        background: #ffffff;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 700;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 360px;
+        padding: 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        font: 14px/1.55 Consolas, Monaco, "Courier New", monospace;
+        resize: vertical;
+      }
+
+      textarea[readonly] {
+        background: #f8fafc;
+      }
+
+      button {
+        padding: 10px 16px;
+        border: 0;
+        border-radius: 10px;
+        color: #ffffff;
+        font-weight: 700;
+        cursor: pointer;
+        background: #2563eb;
+      }
+
+      button.secondary {
+        color: #1f2937;
+        background: #e5e7eb;
+      }
+
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin: 14px 0;
+      }
+
+      .checkbox {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 600;
+      }
+
+      .help {
+        color: #4b5563;
+      }
+
+      .warning {
+        min-height: 46px;
+        padding: 12px;
+        margin-top: 12px;
+        white-space: pre-wrap;
+        border-radius: 10px;
+        background: #fff7ed;
+        color: #9a3412;
+      }
+
+      .dictionary {
+        min-height: 240px;
+      }
+
+      code {
+        padding: 2px 6px;
+        border-radius: 6px;
+        background: #e5e7eb;
+      }
+
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>DTO Schema Description 생성기</h1>
+      <p class="help">
+        Java DTO 필드 선언을 붙여넣으면 필드명 카멜케이스를 단어 단위로 분리하고
+        <code>dictionary.js</code>의 단어장에서 한글명을 찾아
+        <code>@Schema(description = "", example = "")</code>를 자동으로 추가합니다.
+      </p>
+
+      <section class="panel">
+        <div class="toolbar">
+          <button id="convertButton" type="button">Schema 생성</button>
+          <button id="copyButton" class="secondary" type="button">결과 복사</button>
+          <button id="clearButton" class="secondary" type="button">초기화</button>
+          <label class="checkbox">
+            <input id="includeImport" type="checkbox">
+            Schema import 포함
+          </label>
+        </div>
+
+        <div class="grid">
+          <div>
+            <label for="source">입력</label>
+            <textarea id="source" spellcheck="false">private String csNo;
+private String appCd;</textarea>
+          </div>
+          <div>
+            <label for="result">결과</label>
+            <textarea id="result" readonly spellcheck="false"></textarea>
+          </div>
+        </div>
+
+        <div>
+          <label for="unknownView">단어장에 없는 토큰</label>
+          <div id="unknownView" class="warning" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>단어장</h2>
+        <p class="help">
+          컬럼명이 원하는 한글명으로 변환되지 않으면 <code>dictionary.js</code>에
+          <code>token: "한글명"</code> 형식으로 단어를 추가하세요.
+          예: <code>appCd</code>는 <code>app</code> + <code>cd</code>로 분리됩니다.
+        </p>
+        <textarea id="dictionaryView" class="dictionary" readonly spellcheck="false"></textarea>
+      </section>
+    </main>
+
+    <script src="dictionary.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
